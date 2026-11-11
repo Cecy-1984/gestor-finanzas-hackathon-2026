@@ -5,34 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis finanzas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
-    <main class="mx-auto max-w-4xl p-5">
+    <main class="mx-auto max-w-6xl p-5">
         <h1 class="mb-2 text-3xl font-bold">Mis finanzas</h1>
         <p class="mb-6">Registrá tus ingresos y gastos.</p>
-        <section class="mb-6 rounded bg-white p-4">
+
+        <section class="mb-6 rounded bg-white p-4 shadow-sm">
             <h2 class="mb-3 text-xl font-bold">Balance</h2>
-            <p>Ingresos: <strong id="ingresos">$0</strong></p>
-            <p>Gastos: <strong id="gastos">$0</strong></p>
-            <p>Balance: <strong id="saldo">$0</strong></p>
+            <div class="grid gap-3 sm:grid-cols-3">
+                <p>Ingresos: <strong id="ingresos" class="text-green-700">$0</strong></p>
+                <p>Gastos: <strong id="gastos" class="text-red-700">$0</strong></p>
+                <p>Balance: <strong id="saldo">$0</strong></p>
+            </div>
         </section>
-        <section class="mb-6 rounded bg-white p-4">
-            <h2 class="mb-3 text-xl font-bold">Nuevo movimiento</h2>
-            <form id="formulario" class="grid gap-3">
+
+        <section class="mb-6 rounded bg-white p-4 shadow-sm">
+            <h2 class="mb-3 text-xl font-bold">Nueva transacción</h2>
+            <form id="formulario" class="grid gap-3 sm:grid-cols-2">
                 <label>Descripción
-                    <input id="descripcion" type="text" required class="w-full rounded border p-2">
+                    <input id="descripcion" type="text" required class="mt-1 w-full rounded border p-2">
                 </label>
                 <label>Monto
-                    <input id="monto" type="number" min="0.01" step="0.01" required class="w-full rounded border p-2">
+                    <input id="monto" type="number" min="0.01" step="0.01" required class="mt-1 w-full rounded border p-2">
                 </label>
                 <label>Tipo
-                    <select id="tipo" class="w-full rounded border p-2">
+                    <select id="tipo" class="mt-1 w-full rounded border p-2">
                         <option value="ingreso">Ingreso</option>
-                        <option value="gasto">Gasto</option>
+                        <option value="gasto">Egreso</option>
                     </select>
                 </label>
                 <label>Categoría
-                    <select id="categoria" class="w-full rounded border p-2">
+                    <select id="categoria" class="mt-1 w-full rounded border p-2">
                         <option value="sueldo">Sueldo</option>
                         <option value="comida">Comida</option>
                         <option value="transporte">Transporte</option>
@@ -41,17 +46,48 @@
                         <option value="otros">Otros</option>
                     </select>
                 </label>
-                <button type="submit" class="rounded bg-blue-600 p-2 text-white hover:bg-blue-700">Agregar</button>
+                <label>Fecha
+                    <input id="fecha" type="date" required class="mt-1 w-full rounded border p-2">
+                </label>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full rounded bg-blue-600 p-2 text-white hover:bg-blue-700">Agregar transacción</button>
+                </div>
             </form>
-            <p id="aviso" class="mt-2 text-sm"></p>
+            <p id="aviso" class="mt-2 text-sm" aria-live="polite"></p>
         </section>
-        <section class="mb-6 rounded bg-white p-4">
-            <h2 class="mb-3 text-xl font-bold">Movimientos registrados</h2>
-            <div id="lista" class="grid gap-2"></div>
+
+        <section class="mb-6 rounded bg-white p-4 shadow-sm">
+            <h2 class="mb-3 text-xl font-bold">Historial de movimientos</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[700px] text-left text-sm">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th class="px-4 py-3">Fecha</th>
+                            <th class="px-4 py-3">Descripción</th>
+                            <th class="px-4 py-3">Tipo</th>
+                            <th class="px-4 py-3">Categoría</th>
+                            <th class="px-4 py-3">Monto</th>
+                            <th class="px-4 py-3">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista"></tbody>
+                </table>
+            </div>
         </section>
-        <section class="rounded bg-white p-4">
-            <h2 class="mb-3 text-xl font-bold">Totales por categoría</h2>
-            <div id="categorias" class="grid gap-2"></div>
+
+        <section class="mb-6 rounded bg-white p-4 shadow-sm">
+            <h2 class="mb-3 text-xl font-bold">Resumen por categorías</h2>
+            <div class="h-80">
+                <canvas id="categorias" aria-label="Gráfico de barras con los montos agrupados por categoría"></canvas>
+            </div>
+        </section>
+
+        <section class="rounded bg-white p-4 shadow-sm">
+            <h2 class="mb-2 text-xl font-bold">Evolución temporal</h2>
+            <p class="mb-3 text-sm text-gray-600">Comparación acumulada de ingresos, egresos y balance neto según la fecha de cada movimiento.</p>
+            <div class="h-96">
+                <canvas id="evolucion" aria-label="Gráfico de líneas de ingresos, egresos y balance neto a lo largo del tiempo"></canvas>
+            </div>
         </section>
     </main>
     <script type="module" src="./app.js"></script>
