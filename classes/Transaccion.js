@@ -1,12 +1,13 @@
 export class Transaccion {
     static historial = [];
 
-    constructor(id, tipo, descripcion, monto, categoria) {
+    constructor(id, tipo, descripcion, monto, categoria, fecha = "") {
         this.id = id;
         this.tipo = tipo;
         this.descripcion = descripcion;
-        this.monto = monto;
+        this.monto = Number(monto);
         this.categoria = categoria;
+        this.fecha = fecha;
     }
 
     static guardar() {
@@ -23,7 +24,8 @@ export class Transaccion {
                 movimiento.tipo,
                 movimiento.descripcion,
                 movimiento.monto,
-                movimiento.categoria
+                movimiento.categoria,
+                movimiento.fecha || ""
             )
         );
     }
